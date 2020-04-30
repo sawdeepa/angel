@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import { CardList } from './components/card-list/cardlist.jsx'
+import { SearchBox } from './components/searchbox/searchbox.jsx'
 
-function App() {
-  return (
+class App extends Component {
+  constructor()
+  {
+    super();
+    this.state ={
+      angel: [],
+      searchFeild: ''
+    };
+  }
+  componentDidMount()
+  {fetch('https://jsonplaceholder.typicode.com/users')
+    .then(response => response.json() )
+    .then(users => this.setState({ angel: users }) );
+  }
+  render() {
+    const {angel,searchFeild}= this.state;
+    const filteredangel = angel.filter(angel=> angel.name.toLowerCase().includes(searchFeild.toLowerCase()));
+    return(
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Angel's</h1>
+      <SearchBox
+      placeholder='search'
+      handleChange={e=>this.setState({searchFeild: e.target.value })}
+      />
+      
+      <CardList angel ={filteredangel}>
+      
+      </CardList>
+     
     </div>
-  );
+    );
+  }
 }
+
 
 export default App;
